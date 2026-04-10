@@ -247,7 +247,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
           <h4>Contact Details</h4>
           <div class="contact-item"><div class="contact-icon">📍</div><span>Hyderabad, Telangana, India</span></div>
           <div class="contact-item"><div class="contact-icon">📱</div><a href="tel:+917075737778">+91 70757 37778</a></div>
-          <div class="contact-item"><div class="contact-icon">✉️</div><a href="mailto:anjanithanda2901@gmail.com">anjanithanda2901@gmail.com</a></div>
+          <div class="contact-item"><div class="contact-icon">✉️</div><a href="/cdn-cgi/l/email-protection#5a3b34303b34332e323b343e3b68636a6b1a3d373b333674393537"><span class="__cf_email__" data-cfemail="5f3e31353e31362b373e313b3e6d666f6e1f38323e3633713c3032">[email&#160;protected]</span></a></div>
           <div class="contact-item"><div class="contact-icon">🎨</div><a href="https://www.behance.net/anjanithanda" target="_blank">behance.net/anjanithanda</a></div>
           <div class="contact-item"><div class="contact-icon">📸</div><a href="https://www.instagram.com/promopixel_hub" target="_blank">@promopixel_hub</a></div>
         </div>
@@ -436,7 +436,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
         <p>Open to freelance projects, full-time roles, and creative collaborations. Feel free to reach out!</p>
         <div class="info-item"><div class="info-icon">📍</div><div class="info-text"><span>Location</span><p>Hyderabad, Telangana, India</p></div></div>
         <div class="info-item"><div class="info-icon">📱</div><div class="info-text"><span>Phone</span><a href="tel:+917075737778">+91 70757 37778</a></div></div>
-        <div class="info-item"><div class="info-icon">✉️</div><div class="info-text"><span>Email</span><a href="mailto:anjanithanda2901@gmail.com">anjanithanda2901@gmail.com</a></div></div>
+        <div class="info-item"><div class="info-icon">✉️</div><div class="info-text"><span>Email</span><a href="/cdn-cgi/l/email-protection#ef8e81858e81869b878e818b8eddd6dfdeaf88828e8683c18c8082"><span class="__cf_email__" data-cfemail="d8b9b6b2b9b6b1acb0b9b6bcb9eae1e8e998bfb5b9b1b4f6bbb7b5">[email&#160;protected]</span></a></div></div>
         <div class="info-item"><div class="info-icon">🎨</div><div class="info-text"><span>Behance</span><a href="https://www.behance.net/anjanithanda" target="_blank">behance.net/anjanithanda</a></div></div>
       </div>
       <div class="glass contact-form">
@@ -459,24 +459,254 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
   <div class="social-links">
     <a href="https://www.behance.net/anjanithanda" target="_blank" class="social-link" title="Behance">Be</a>
     <a href="https://www.instagram.com/promopixel_hub" target="_blank" class="social-link" title="Instagram">Ig</a>
-    <a href="mailto:anjanithanda2901@gmail.com" class="social-link" title="Email">@</a>
+    <a href="/cdn-cgi/l/email-protection#a6c7c8ccc7c8cfd2cec7c8c2c7949f9697e6c1cbc7cfca88c5c9cb" class="social-link" title="Email">@</a>
   </div>
   <p class="footer-copy">© 2025 Thanda Anjani · All rights reserved</p>
 </footer>
 
 <script>
-  window.addEventListener('load', () => {
-    document.querySelectorAll('.skill-fill').forEach(f => {
-      f.style.transition = 'width 1.5s cubic-bezier(0.4,0,0.2,1)';
+// ── Particle canvas in hero ───────────────────────────────────────────────
+(function(){
+  const canvas = document.createElement('canvas');
+  canvas.id = 'hero-canvas';
+  Object.assign(canvas.style, {
+    position:'absolute', inset:'0', width:'100%', height:'100%',
+    pointerEvents:'none', zIndex:'0', opacity:'0.55'
+  });
+  const hero = document.getElementById('hero');
+  hero.style.position = 'relative';
+  hero.insertBefore(canvas, hero.firstChild);
+  // Ensure hero content sits above canvas
+  [...hero.children].forEach(el => { if(el !== canvas) el.style.position = 'relative'; });
+
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  const COLORS = ['#7c3aed','#c084fc','#22d3ee','#9f5fff'];
+
+  function resize(){ W = canvas.width = canvas.offsetWidth; H = canvas.height = canvas.offsetHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  function rand(a,b){ return a + Math.random()*(b-a); }
+
+  class Particle {
+    constructor(){this.reset(true);}
+    reset(init){
+      this.x = rand(0, W); this.y = init ? rand(0, H) : H + 10;
+      this.r = rand(1, 2.8); this.vx = rand(-0.3,0.3); this.vy = rand(-0.6,-0.2);
+      this.alpha = rand(0.3, 0.9); this.color = COLORS[Math.floor(rand(0,COLORS.length))];
+      this.life = 0; this.maxLife = rand(200,400);
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy; this.life++;
+      if(this.life > this.maxLife || this.y < -10) this.reset(false);
+    }
+    draw(){
+      ctx.save(); ctx.globalAlpha = this.alpha * (1 - this.life/this.maxLife);
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fillStyle = this.color; ctx.fill(); ctx.restore();
+    }
+  }
+
+  for(let i=0;i<90;i++) particles.push(new Particle());
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p=>{p.update();p.draw();});
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// ── Cursor glow ───────────────────────────────────────────────────────────
+(function(){
+  const cursor = document.createElement('div');
+  Object.assign(cursor.style, {
+    position:'fixed', width:'320px', height:'320px',
+    borderRadius:'50%', pointerEvents:'none', zIndex:'9999',
+    background:'radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)',
+    transform:'translate(-50%,-50%)', transition:'opacity 0.3s',
+    top:'-200px', left:'-200px'
+  });
+  document.body.appendChild(cursor);
+  document.addEventListener('mousemove', e=>{
+    cursor.style.top = e.clientY+'px';
+    cursor.style.left = e.clientX+'px';
+  });
+})();
+
+// ── Scroll-reveal (Intersection Observer) ────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    .reveal { opacity:0; transform:translateY(36px); transition:opacity 0.7s cubic-bezier(.4,0,.2,1), transform 0.7s cubic-bezier(.4,0,.2,1); }
+    .reveal.left-reveal { transform:translateX(-40px); }
+    .reveal.right-reveal { transform:translateX(40px); }
+    .reveal.visible { opacity:1 !important; transform:translate(0,0) !important; }
+    .reveal-scale { opacity:0; transform:scale(0.92); transition:opacity 0.6s ease, transform 0.6s ease; }
+    .reveal-scale.visible { opacity:1; transform:scale(1); }
+  `;
+  document.head.appendChild(style);
+
+  // Tag elements
+  document.querySelectorAll('.glass').forEach((el,i)=>{
+    el.classList.add('reveal');
+    el.style.transitionDelay = (i % 3)*0.12 + 's';
+  });
+  document.querySelectorAll('.section-label,.section-title,.section-divider').forEach(el=>{
+    el.classList.add('reveal');
+  });
+  document.querySelectorAll('.hobby-pill').forEach((el,i)=>{
+    el.classList.add('reveal-scale');
+    el.style.transitionDelay = i*0.07+'s';
+  });
+  document.querySelectorAll('.tag').forEach((el,i)=>{
+    el.classList.add('reveal-scale');
+    el.style.transitionDelay = i*0.06+'s';
+  });
+  document.querySelectorAll('.timeline-card.left').forEach(el=>el.classList.add('left-reveal'));
+  document.querySelectorAll('.timeline-card.right').forEach(el=>el.classList.add('right-reveal'));
+
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }});
+  }, {threshold:0.12});
+
+  document.querySelectorAll('.reveal, .reveal-scale').forEach(el=>io.observe(el));
+})();
+
+// ── Skill bars animate on scroll ─────────────────────────────────────────
+(function(){
+  // Store target widths then zero them
+  const fills = document.querySelectorAll('.skill-fill');
+  const targets = [...fills].map(f => f.style.width);
+  fills.forEach(f => f.style.width = '0');
+
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const fills2 = e.target.querySelectorAll('.skill-fill');
+        fills2.forEach((f,i)=>{ setTimeout(()=>{ f.style.width = targets[[...fills].indexOf(f)]; }, i*120); });
+        io.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.3});
+  document.querySelectorAll('.skill-group').forEach(g=>io.observe(g));
+})();
+
+// ── Timeline dots pulse ───────────────────────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes dotPulse {
+      0%,100%{ box-shadow: 0 0 0 0 rgba(124,58,237,0.6), 0 0 20px var(--purple); }
+      50%{ box-shadow: 0 0 0 10px rgba(124,58,237,0), 0 0 30px var(--purple); }
+    }
+    @keyframes dotPulseCyan {
+      0%,100%{ box-shadow: 0 0 0 0 rgba(34,211,238,0.6), 0 0 20px var(--cyan); }
+      50%{ box-shadow: 0 0 0 10px rgba(34,211,238,0), 0 0 30px var(--cyan); }
+    }
+    .dot { animation: dotPulse 2.4s ease-in-out infinite; }
+    .dot[style*='cyan'] { animation: dotPulseCyan 2.4s ease-in-out infinite; }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ── Nav active link on scroll ─────────────────────────────────────────────
+(function(){
+  const links = document.querySelectorAll('.nav-links a');
+  const style = document.createElement('style');
+  style.textContent = `.nav-links a.active { color:#fff; }`;
+  document.head.appendChild(style);
+
+  const sections = [...links].map(l=>document.querySelector(l.getAttribute('href'))).filter(Boolean);
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        links.forEach(l=>l.classList.remove('active'));
+        const active = [...links].find(l=>l.getAttribute('href')==='#'+e.target.id);
+        if(active) active.classList.add('active');
+      }
+    });
+  }, {threshold:0.4});
+  sections.forEach(s=>io.observe(s));
+})();
+
+// ── Hero eyebrow sparkle ──────────────────────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes sparkle { 0%,100%{opacity:1;transform:scale(1) rotate(0deg);} 50%{opacity:0.6;transform:scale(1.4) rotate(20deg);} }
+    .hero-eyebrow { animation: fadeUp 1s 0.1s both; }
+    .hero-eyebrow::before { content:'✦'; animation: sparkle 2s ease-in-out infinite; display:inline-block; margin-right:0.4rem; }
+  `;
+  // Remove inline ✦ from eyebrow to avoid double
+  const eyebrow = document.querySelector('.hero-eyebrow');
+  if(eyebrow) eyebrow.textContent = eyebrow.textContent.replace('✦','').trim();
+  document.head.appendChild(style);
+})();
+
+// ── Section divider grow animation ───────────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    .section-divider { width:0 !important; transition: width 0.9s 0.2s cubic-bezier(.4,0,.2,1) !important; }
+    .section-divider.visible { width:48px !important; }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ── Floating nav logo animation ───────────────────────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes navFloat { 0%,100%{letter-spacing:-0.01em} 50%{letter-spacing:0.06em} }
+    .nav-logo { animation: navFloat 4s ease-in-out infinite; }
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .hero-name {
+      background-size: 200% 200% !important;
+      animation: fadeUp 1s 0.3s both, gradientShift 5s 1.3s ease infinite !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
+// ── Portfolio cards tilt on hover ─────────────────────────────────────────
+(function(){
+  document.querySelectorAll('.portfolio-link-card, .glass').forEach(card=>{
+    card.addEventListener('mousemove', e=>{
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left)/rect.width - 0.5;
+      const y = (e.clientY - rect.top)/rect.height - 0.5;
+      card.style.transform = `perspective(600px) rotateY(${x*8}deg) rotateX(${-y*8}deg) translateY(-4px)`;
+    });
+    card.addEventListener('mouseleave', ()=>{
+      card.style.transform = '';
     });
   });
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 60) {
-      document.querySelector('nav').style.background = 'rgba(3,5,15,0.98)';
-    } else {
-      document.querySelector('nav').style.background = 'rgba(3,5,15,0.8)';
-    }
-  });
+})();
+
+// ── Counter animation for skill percentages ───────────────────────────────
+(function(){
+  const pcts = document.querySelectorAll('.skill-pct');
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){
+        const el = e.target;
+        const target = parseInt(el.textContent);
+        let current = 0;
+        const step = target/60;
+        const timer = setInterval(()=>{
+          current = Math.min(current+step, target);
+          el.textContent = Math.round(current)+'%';
+          if(current>=target) clearInterval(timer);
+        }, 20);
+        io.unobserve(el);
+      }
+    });
+  }, {threshold:0.5});
+  pcts.forEach(p=>io.observe(p));
+})();
 </script>
-</body>
-</html>
