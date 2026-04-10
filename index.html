@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Thanda Anjani — Video Editor & Motion Designer</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Abril+Fatface&family=Cormorant+Garamond:wght@600;700;800&display=swap');
 
 :root {
   --navy: #03050f;
@@ -49,7 +49,9 @@ nav {
   background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,58,237,0.18) 0%, transparent 70%);
 }
 .hero-eyebrow { font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase; color: var(--violet); font-weight: 500; margin-bottom: 1.5rem; }
-.hero-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: clamp(3.5rem, 10vw, 8rem); line-height: 1; letter-spacing: -0.02em; background: linear-gradient(160deg, #ffffff 30%, var(--violet) 70%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.8rem; animation: fadeUp 1s 0.3s both; }
+.hero-name { font-family: 'Abril Fatface', cursive; font-weight: 700; font-size: clamp(2.4rem, 7vw, 6.5rem); line-height: 1.1; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 0.8rem; white-space: nowrap; background: none; -webkit-text-fill-color: inherit; color: #fff; }
+.hero-name .letter { display: inline-block; opacity: 0; transform: translateY(40px) scale(0.8); animation: letterPop 0.6s cubic-bezier(0.34,1.56,0.64,1) forwards; background: linear-gradient(160deg, #ffffff 30%, #c084fc 70%, #22d3ee 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+@keyframes letterPop { to { opacity:1; transform: translateY(0) scale(1); } }
 .hero-role { font-size: clamp(1rem, 2.5vw, 1.3rem); font-weight: 300; color: var(--muted); margin-bottom: 1rem; animation: fadeUp 1s 0.5s both; }
 .hero-tagline { font-size: 1rem; font-style: italic; color: rgba(255,255,255,0.4); margin-bottom: 2.5rem; animation: fadeUp 1s 0.7s both; }
 .hero-ctas { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; animation: fadeUp 1s 0.9s both; }
@@ -181,7 +183,7 @@ section { padding: 7rem 2rem; }
 .send-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,58,237,0.4); }
 
 footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; }
-.footer-name { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.3rem; background: linear-gradient(135deg, #fff, var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; }
+.footer-name { font-family: 'Abril Fatface', cursive; font-weight: 700; font-size: 1.3rem; background: linear-gradient(135deg, #fff, var(--violet)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.25rem; }
 .footer-role { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
 .social-links { display: flex; justify-content: center; gap: 1rem; margin-bottom: 2rem; }
 .social-link { width: 40px; height: 40px; border-radius: 10px; background: var(--card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--muted); font-size: 0.9rem; transition: all 0.2s; }
@@ -222,7 +224,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
 
 <section id="hero">
   <p class="hero-eyebrow">✦ Creative Professional & Visual Storyteller</p>
-  <h1 class="hero-name">Thanda<br>Anjani</h1>
+  <h1 class="hero-name">THANDA ANJANI</h1>
   <p class="hero-role">Video Editor & Motion Graphic Designer</p>
   <p class="hero-tagline">"Crafting visual stories that inspire and engage"</p>
   <div class="hero-ctas">
@@ -666,8 +668,7 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
       100% { background-position: 0% 50%; }
     }
     .hero-name {
-      background-size: 200% 200% !important;
-      animation: fadeUp 1s 0.3s both, gradientShift 5s 1.3s ease infinite !important;
+      background-size: 200% 200%;
     }
   `;
   document.head.appendChild(style);
@@ -708,5 +709,26 @@ footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: ce
     });
   }, {threshold:0.5});
   pcts.forEach(p=>io.observe(p));
+})();
+
+// ── Letter-by-letter name animation ──────────────────────────────────────
+(function(){
+  function animateName() {
+    const nameEl = document.querySelector('.hero-name');
+    if(!nameEl) return;
+    const text = nameEl.textContent.trim();
+    let delay = 0.3;
+    nameEl.innerHTML = [...text].map(ch => {
+      if(ch === ' ') return '<span style="display:inline-block;width:0.35em">&nbsp;</span>';
+      const s = `<span class="letter" style="animation-delay:${delay.toFixed(2)}s">${ch}</span>`;
+      delay += 0.07;
+      return s;
+    }).join('');
+  }
+  if(document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', animateName);
+  } else {
+    animateName();
+  }
 })();
 </script>
